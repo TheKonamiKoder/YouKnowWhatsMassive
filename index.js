@@ -11,8 +11,8 @@ let aura = 0;
 let level = "Noob";
 
 let brainrotWords = [
-	"Skibidi",
-	"Skibidi toilet",
+	"skibidi",
+	"skibidi toilet",
 	"gyatt",
 	"mewing",
 	"mew",
@@ -48,7 +48,10 @@ let brainrotWords = [
 	"massive",
 	"crazy",
 	"maxxing",
-	"imagine if ninja got a low taper fade. Put the fries in the bag",
+	"imagine if ninja got a low taper fade",
+	"put the fries in the bag",
+	"egypt property mogul",
+	"john cena",
 	"baby gronk",
 	"livvy dunne",
 	"on skib",
@@ -79,7 +82,7 @@ let brainrotWords = [
 	"brain rot",
 	"ishowspeed/ishowmeat",
 	"bing chilling",
-	"bomboclat",
+	"bombaclat",
 	"what da dog doin",
 	"mog",
 	"mogging",
@@ -105,8 +108,13 @@ let brainrotWords = [
 	"that feeling when you have knee surgery",
 	"knee surgery",
 	"diddy",
-	"diddy party"
+	"diddy party",
+	"drake",
 ];
+for (let i = 0; i < brainrotWords.length; i++) {
+	brainrotWords[i] = brainrotWords[i].toLowerCase();
+}
+
 let usedBrainrotWords = [];
 
 // Setup
@@ -135,7 +143,7 @@ loginForm.addEventListener("submit", (e) => {
 
 brainrotInput.addEventListener("keydown", (e) => {
 	if (e.key === "Enter") {
-		let word = brainrotInput.value;
+		let word = brainrotInput.value.toLowerCase();
 		
 		if (brainrotWords.includes(word) && !usedBrainrotWords.includes(word)) {
 			let currentTime = date.getTime();
