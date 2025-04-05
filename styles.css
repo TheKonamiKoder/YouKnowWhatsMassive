@@ -4,21 +4,21 @@
 	text-align: center;
 }
 
-#main-title {
-	color: purple;
-	size: 69px;
-	font-family: Sofia;
-	font-size: 42px;
-}
-
-#user-information {
+.top-right {
 	position: fixed;
 	top: 10px;
 	right: 10px;
 }
 
-#timer {
+.bottom-right {
 	position: fixed;
 	bottom: 10px;
 	right: 10px;
+}
+
+#main-title {
+	color: purple;
+	size: 69px;
+	font-family: Sofia;
+	font-size: 42px;
 }

@@ -1,9 +1,12 @@
-const AURA_PER_CHARACTER = 0.420;
+const AURA_PER_CHARACTER = 2.10;
 const AURA_PER_SECOND = 4.20;
-const AURA_PENALTY = 21;
+const AURA_PENALTY = 30;
+
+const TIMER_STARTING = 69;	// for testing 
+let remainingTime = TIMER_STARTING;
+let timerIntervalID;
 
 const REACTION_TIME = 200;
-const date = new Date();
 let lastTime = 0;
 
 let username = "";
@@ -102,7 +105,8 @@ let brainrotWords = [
 	"1 2 buckle my shoe",
 	"oil up",
 	"did you pray today",
-	"cap/stop the cap",
+	"cap",
+	"stop the cap",
 	"Ohio",
 	"only in Ohio",
 	"that feeling when you have knee surgery",
@@ -110,6 +114,11 @@ let brainrotWords = [
 	"diddy",
 	"diddy party",
 	"drake",
+	"grinch",
+	"knee surgery",
+	"as the kids say",
+	"ts pmo",
+	"get out",
 ];
 for (let i = 0; i < brainrotWords.length; i++) {
 	brainrotWords[i] = brainrotWords[i].toLowerCase();
@@ -118,6 +127,8 @@ for (let i = 0; i < brainrotWords.length; i++) {
 let usedBrainrotWords = [];
 
 // Setup
+let introduction = document.getElementById("introduction");
+
 let loginForm = document.getElementById("login-form");
 
 let userInformation = document.getElementById("user-information");
@@ -126,6 +137,56 @@ userInformation.style.display = "none";
 let brainrotInput = document.getElementById("brainrot-input");
 brainrotInput.parentElement.style.display = "none";
 
+let timer = document.getElementById("timer");
+timer.style.display = "none";
+
+let gameOverMessage = document.getElementById("game-over-message");
+gameOverMessage.style.display = "none";
+
+function prettyPrintTime(time) {
+	return `${Math.floor(time / 60)}:${(time % 60)
+		.toLocaleString("en-UK", {minimumIntegerDigits: 2, useGrouping: false})}`
+}
+
+function decrementTimer() {
+	if (remainingTime != 0) {
+		remainingTime -= 1;
+		
+		document
+			.getElementById("timer")
+			.innerHTML = prettyPrintTime(remainingTime);
+	} else {
+		clearInterval(timerIntervalID);
+
+		gameOver();
+	}
+}
+
+function gameOver() {
+	let currentTime = Date.now();
+	console.log(currentTime);
+	console.log(lastTime);
+	let deltaTime = currentTime - lastTime;
+	currentTime = lastTime;
+
+	aura -= (AURA_PER_SECOND * ((deltaTime - REACTION_TIME) / 1000));
+
+	console.log(deltaTime);
+	console.log(AURA_PER_SECOND * ((deltaTime - REACTION_TIME) / 1000));
+
+	document
+		.getElementById("user-information")
+		.innerHTML = `Username: ${username}<br>Aura: ${aura.toFixed(1)}<br>Level: ${level}<br>`;
+
+	brainrotInput.parentElement.style.display = "none";
+	timer.style.display = "none";
+	
+	gameOverMessage.style.display = "block";
+
+	userInformation.className = "centered";
+}
+
+// Starts the game after the user creates their character
 loginForm.addEventListener("submit", (e) => {
 	e.preventDefault();
 	
@@ -135,20 +196,32 @@ loginForm.addEventListener("submit", (e) => {
 		.getElementById("user-information")
 		.innerHTML = `Username: ${username}<br>Aura: ${aura}<br>Level: ${level}<br>`;
 	
+	introduction.style.display = "none";
 	loginForm.style.display = "none";
+	
 	userInformation.style.display = "block";
 	brainrotInput.parentElement.style.display = "block";
-	lastTime = date.getTime();
+	timer.style.display = "block";
+
+	document
+		.getElementById("timer")
+		.innerHTML = prettyPrintTime(remainingTime);
+
+	timerIntervalID = setInterval(decrementTimer, 1000);
+
+	lastTime = Date.now();
+	console.log(lastTime)
 });
 
+// Checks if the user entered brainrot and calculates their aura loss/gain
 brainrotInput.addEventListener("keydown", (e) => {
 	if (e.key === "Enter") {
 		let word = brainrotInput.value.toLowerCase();
 		
 		if (brainrotWords.includes(word) && !usedBrainrotWords.includes(word)) {
-			let currentTime = date.getTime();
+			let currentTime = Date.now();
 			let deltaTime = currentTime - lastTime;
-			currentTime = lastTime;
+			lastTime = currentTime;
 
 			aura += (word.length * AURA_PER_CHARACTER) - (AURA_PER_SECOND * ((deltaTime - REACTION_TIME) / 1000));
 			console.log((word.length * AURA_PER_CHARACTER) - (AURA_PER_SECOND * ((deltaTime - REACTION_TIME) / 1000)));
